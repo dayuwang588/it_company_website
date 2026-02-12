@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - IT公司官网{% endblock %}
+
+{% block content %}
+<!-- 面包屑导航 -->
+<section class="bg-light py-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product:product_list' %}">产品中心</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- 产品详情主体 -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧产品详情 -->
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <!-- 产品标题与分类 -->
+                <h1 class="mb-3">{{ product.title }}</h1>
+                <p class="text-muted mb-4">
+                    <span class="badge bg-secondary">{{ product.category.name }}</span>
+                    <span class="ms-2"><i class="fa fa-clock-o me-1"></i> 发布时间：{{ product.created_at|date:'Y年m月d日' }}</span>
+                </p>
+
+                <!-- 产品封面图 -->
+                <div class="mb-5">
+                    <img src="{{ product.image.url }}" class="img-fluid rounded shadow-lg w-100" alt="{{ product.title }}">
+                </div>
+
+                <!-- 产品简介 -->
+                <div class="card shadow-sm mb-5">
+                    <div class="card-header bg-light">
+                        <h4 class="card-title mb-0">产品简介</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="fs-5 text-muted">{{ product.desc|linebreaksbr }}</p>
+                    </div>
+                </div>
+
+                <!-- 产品详情内容 -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="card-title mb-0">产品详情</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="content text-muted fs-5 line-height-2">
+                            {{ product.content|linebreaksbr }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧推荐产品 -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">同分类推荐产品</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recommend_products %}
+                            <ul class="list-group list-group-flush">
+                                {% for r_product in recommend_products %}
+                                    <li class="list-group-item border-0 pb-3 mb-3 border-bottom">
+                                        <a href="{% url 'product:product_detail' r_product.id %}" class="text-decoration-none text-dark">
+                                            <img src="{{ r_product.image.url }}" class="img-fluid mb-2" style="height: 80px; width: 100%; object-fit: cover;" alt="{{ r_product.title }}">
+                                            <h6 class="mb-1">{{ r_product.title }}</h6>
+                                            <small class="text-muted">{{ r_product.category.name }}</small>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted text-center mb-0">暂无同分类产品</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'product:product_list' %}?category_id={{ product.category.id }}" class="btn btn-outline-primary btn-sm w-100">查看更多{{ product.category.name }}产品</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 自定义样式 -->
+{% block extra_css %}
+<style>
+    .line-height-2 {
+        line-height: 2;
+    }
+    .content img {
+        max-width: 100%;
+        height: auto;
+        margin: 10px 0;
+    }
+    .content p {
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+{% endblock %}

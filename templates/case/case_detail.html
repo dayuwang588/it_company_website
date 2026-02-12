@@ -1,0 +1,83 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ case.title }} - 案例详情 - {{ company_info.name|default:'IT公司官网' }}{% endblock %}
+
+{% block content %}
+<!-- 案例详情页头部 -->
+<section class="bg-light py-4">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'case_list' %}">成功案例</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ case.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- 案例详情主体 -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧案例详情 -->
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <!-- 案例标题 + 基础信息 -->
+                <h1 class="mb-3">{{ case.title }}</h1>
+                <div class="mb-4 text-muted">
+                    {% if case.category %}
+                        <span class="me-3"><i class="fa fa-tag"></i> {{ case.category.name }}</span>
+                    {% endif %}
+                    {% if case.client %}
+                        <span class="me-3"><i class="fa fa-user"></i> {{ case.client }}</span>
+                    {% endif %}
+                    <span><i class="fa fa-calendar"></i> {{ case.created_at|date:'Y-m-d' }}</span>
+                </div>
+
+                <!-- 案例封面 -->
+                {% if case.cover %}
+                    <div class="mb-4">
+                        <img src="{{ case.cover.url }}" class="img-fluid rounded shadow-sm" alt="{{ case.title }}">
+                    </div>
+                {% endif %}
+
+                <!-- 案例详情内容 -->
+                <div class="content mb-4">
+                    {{ case.content|linebreaksbr }}
+                </div>
+            </div>
+
+            <!-- 右侧相关案例 -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">相关案例</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if related_cases %}
+                            <ul class="list-unstyled">
+                                {% for rel_case in related_cases %}
+                                    <li class="mb-3 border-bottom pb-3">
+                                        <a href="{% url 'case_detail' rel_case.id %}" class="text-decoration-none text-dark">
+                                            {% if rel_case.cover %}
+                                                <img src="{{ rel_case.cover.url }}" class="img-fluid mb-2" style="height: 80px; width: 100%; object-fit: cover;" alt="{{ rel_case.title }}">
+                                            {% endif %}
+                                            <h6>{{ rel_case.title }}</h6>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted text-center">暂无相关案例</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'case_list' %}" class="btn btn-outline-primary btn-sm w-100">查看更多案例</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

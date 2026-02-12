@@ -1,0 +1,105 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - IT公司官网{% endblock %}
+
+{% block content %}
+<!-- 面包屑导航 -->
+<section class="bg-light py-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'news:news_list' %}">新闻动态</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ news.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- 新闻详情主体 -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧新闻详情 -->
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <!-- 新闻标题与基础信息 -->
+                <h1 class="mb-4">{{ news.title }}</h1>
+                <div class="mb-4 text-muted">
+                    {% if news.is_top %}
+                        <span class="badge bg-danger me-2">置顶</span>
+                    {% endif %}
+                    <span><i class="fa fa-clock-o me-1"></i> {{ news.created_at|date:'Y年m月d日' }}</span>
+                </div>
+
+                <!-- 新闻封面图 -->
+                {% if news.image %}
+                    <div class="mb-5">
+                        <img src="{{ news.image.url }}" class="img-fluid rounded shadow-lg w-100" alt="{{ news.title }}">
+                    </div>
+                {% endif %}
+
+                <!-- 新闻正文 -->
+                <div class="content text-muted fs-5 line-height-2">
+                    {{ news.content|linebreaksbr }}
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="mt-5">
+                    <a href="{% url 'news:news_list' %}" class="btn btn-outline-primary">
+                        <i class="fa fa-arrow-left me-2"></i> 返回新闻列表
+                    </a>
+                </div>
+            </div>
+
+            <!-- 右侧推荐新闻 -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">推荐新闻</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recommend_news %}
+                            <ul class="list-group list-group-flush">
+                                {% for r_news in recommend_news %}
+                                    <li class="list-group-item border-0 pb-3 mb-3 border-bottom">
+                                        <a href="{% url 'news:news_detail' r_news.id %}" class="text-decoration-none text-dark">
+                                            {% if r_news.image %}
+                                                <img src="{{ r_news.image.url }}" class="img-fluid mb-2" style="height: 80px; width: 100%; object-fit: cover;" alt="{{ r_news.title }}">
+                                            {% endif %}
+                                            <h6 class="mb-1">{{ r_news.title }}</h6>
+                                            <small class="text-muted">{{ r_news.created_at|date:'Y-m-d' }}</small>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted text-center mb-0">暂无推荐新闻</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'news:news_list' %}" class="btn btn-outline-primary btn-sm w-100">查看全部新闻</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 自定义样式 -->
+{% block extra_css %}
+<style>
+    .line-height-2 {
+        line-height: 2;
+    }
+    .content img {
+        max-width: 100%;
+        height: auto;
+        margin: 10px 0;
+    }
+    .content p {
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+{% endblock %}

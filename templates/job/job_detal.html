@@ -1,0 +1,118 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - IT公司官网{% endblock %}
+
+{% block content %}
+<!-- 面包屑导航 -->
+<section class="bg-light py-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'job:job_list' %}">人才招聘</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ job.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- 岗位详情主体 -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧详情内容 -->
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <!-- 岗位标题与基础信息 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">{{ job.title }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><strong>所属部门：</strong> {{ job.department }}</li>
+                                    <li class="mb-2"><strong>招聘人数：</strong> {{ job.num }}人</li>
+                                    <li class="mb-2"><strong>经验要求：</strong> {{ job.experience }}</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><strong>学历要求：</strong> {{ job.education }}</li>
+                                    <li class="mb-2"><strong>薪资范围：</strong> {{ job.salary }}</li>
+                                    <li class="mb-2"><strong>发布时间：</strong> {{ job.created_at|date:'Y年m月d日' }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- 岗位详情内容 -->
+                        <h4 class="mb-3">岗位职责与要求</h4>
+                        <div class="content text-muted fs-5 line-height-2">
+                            {{ job.content|linebreaksbr }}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <p class="mb-0 text-secondary"><i class="fa fa-info-circle me-2"></i> 本岗位长期有效，欢迎符合条件的候选人投递简历</p>
+                    </div>
+                </div>
+
+                <!-- 应聘指引 -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h4 class="card-title mb-0">应聘方式</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="fs-5">请将个人简历发送至邮箱：<strong>hr@itcompany.com</strong></p>
+                        <p class="fs-5">邮件主题格式：<strong>【应聘{{ job.title }}】- 姓名 - 联系电话</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧推荐岗位 -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">推荐岗位</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recommend_jobs %}
+                            <ul class="list-group list-group-flush">
+                                {% for r_job in recommend_jobs %}
+                                    <li class="list-group-item border-0 pb-3 mb-3 border-bottom">
+                                        <a href="{% url 'job:job_detail' r_job.id %}" class="text-decoration-none text-dark">
+                                            <h6 class="mb-1">{{ r_job.title }}</h6>
+                                            <small class="text-muted">
+                                                {{ r_job.department }} · {{ r_job.salary }}
+                                            </small>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted text-center mb-0">暂无推荐岗位</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'job:job_list' %}" class="btn btn-outline-primary w-100">查看全部岗位</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 自定义样式 -->
+{% block extra_css %}
+<style>
+    .line-height-2 {
+        line-height: 2;
+    }
+    .content img {
+        max-width: 100%;
+        height: auto;
+        margin: 10px 0;
+    }
+</style>
+{% endblock %}
+{% endblock %}

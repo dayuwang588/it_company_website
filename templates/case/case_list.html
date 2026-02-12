@@ -1,0 +1,76 @@
+
+{% extends 'base.html' %}
+
+{% block title %}成功案例 - {{ company_info.name|default:'IT公司官网' }}{% endblock %}
+
+{% block content %}
+<!-- 案例列表页头部 -->
+<section class="bg-primary text-white py-5">
+    <div class="container">
+        <h1 class="display-5">成功案例</h1>
+        <p class="lead">多年行业沉淀，为不同领域客户打造定制化解决方案</p>
+    </div>
+</section>
+
+<!-- 案例分类筛选 + 案例列表 -->
+<section class="py-5">
+    <div class="container">
+        <!-- 分类筛选栏 -->
+        <div class="mb-4">
+            <div class="btn-group" role="group">
+                <a href="{% url 'case:case_list' %}" class="btn {% if not request.GET.category_id %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    全部案例
+                </a>
+                {% for category in categories %}
+                    <a href="?category_id={{ category.id }}" class="btn {% if request.GET.category_id == category.id|stringformat:'i' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        {{ category.name }}
+                    </a>
+                {% empty %}
+                    <span class="text-muted">暂无案例分类</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 案例列表 -->
+        <div class="row g-4">
+            {% for case in cases %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <!-- 案例封面 -->
+                        {% if case.cover %}
+                            <img src="{{ case.cover.url }}" class="card-img-top" alt="{{ case.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <span class="text-muted">暂无封面</span>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- 案例信息 -->
+                        <div class="card-body">
+                            <h5 class="card-title">{{ case.title }}</h5>
+                            {% if case.category %}
+                                <span class="badge bg-secondary mb-2">{{ case.category.name }}</span>
+                            {% endif %}
+                            <p class="card-text text-muted">{{ case.desc|truncatechars:80 }}</p>
+                            {% if case.client %}
+                                <p class="small text-muted">客户：{{ case.client }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 查看详情按钮 -->
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'case_detail' case.id %}" class="btn btn-outline-primary btn-sm">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <!-- 无案例时的提示 -->
+                <div class="col-12 text-center py-5">
+                    <h4 class="text-muted">暂无相关案例</h4>
+                    <p class="text-secondary">我们正在持续更新案例库，敬请期待</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+asgiref==3.8.1
+backports.zoneinfo==0.2.1
+cffi==1.17.1
+cryptography==46.0.4
+Django==4.2.7
+django-extensions==3.2.3
+django-tinymce==4.1.0
+pillow==10.4.0
+pycparser==2.23
+PyMySQL==1.1.2
+sqlparse==0.5.5
+typing_extensions==4.13.2
+tzdata==2025.3

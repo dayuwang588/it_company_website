@@ -1,0 +1,38 @@
+
+<!-- templates/contact/contact.html -->
+{% extends 'base.html' %}
+
+{% block title %}联系我们 - IT公司官网{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">联系我们</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>公司信息</h4>
+                <p><i class="fas fa-map-marker-alt me-2"></i>地址：北京市朝阳区科技园区88号</p>
+                <p><i class="fas fa-phone me-2"></i>电话：400-123-4567</p>
+                <p><i class="fas fa-envelope me-2"></i>邮箱：contact@itcompany.com</p>
+                <!-- 地图嵌入（可选，用百度/高德地图API） -->
+                <div id="map" style="width: 100%; height: 300px; background: #eee;"></div>
+            </div>
+            <div class="col-md-6">
+                <h4>在线留言</h4>
+                <!-- 显示提示信息 -->
+                {% if messages %}
+                    {% for msg in messages %}
+                    <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+                    {% endfor %}
+                {% endif %}
+                <!-- 表单 -->
+                <form method="post">
+                    {% csrf_token %}  <!-- Django CSRF防护 -->
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary mt-3">提交留言</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

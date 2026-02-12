@@ -1,0 +1,80 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - IT公司官网{% endblock %}
+
+{% block content %}
+<!-- 页面头部Banner -->
+<section class="bg-primary text-white py-5">
+    <div class="container">
+        <h1 class="display-5">核心团队</h1>
+        <p class="lead">专业的团队，打造高品质的产品与服务</p>
+    </div>
+</section>
+
+<!-- 团队成员列表 -->
+<section class="py-5">
+    <div class="container">
+        {% if team_members %}
+            <div class="row g-4">
+                {% for member in team_members %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card shadow-sm h-100 text-center team-card">
+                            <!-- 成员头像 -->
+                            <div class="avatar-container">
+                                <img src="{{ member.avatar.url }}" class="card-img-top rounded-circle mx-auto mt-4" alt="{{ member.name }}" style="width: 150px; height: 150px; object-fit: cover; border: 5px solid #fff;">
+                            </div>
+                            <!-- 成员信息 -->
+                            <div class="card-body">
+                                <h5 class="card-title">{{ member.name }}</h5>
+                                <p class="text-primary fw-bold">{{ member.position }}</p>
+                                <p class="card-text text-muted line-clamp-3">
+                                    {{ member.desc|truncatechars:100 }}
+                                </p>
+                            </div>
+                            <!-- 查看详情按钮 -->
+                            <div class="card-footer bg-transparent">
+                                <a href="{% url 'team:team_detail' member.id %}" class="btn btn-outline-primary btn-sm">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- 无团队成员时的提示 -->
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fa fa-users text-muted fa-4x"></i>
+                </div>
+                <h4 class="text-muted">暂无团队成员信息</h4>
+                <p class="text-secondary">我们的团队信息正在完善中，敬请期待</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- 自定义样式 -->
+{% block extra_css %}
+<style>
+    .team-card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .team-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .avatar-container {
+        background-color: #f8f9fa;
+        padding-bottom: 10px;
+    }
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+{% endblock %}

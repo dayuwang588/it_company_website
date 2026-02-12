@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - IT公司官网{% endblock %}
+
+{% block content %}
+<!-- 面包屑导航 -->
+<section class="bg-light py-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'team:team_list' %}">核心团队</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ member.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- 成员详情主体 -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧成员详情 -->
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="card shadow-sm">
+                    <!-- 成员头像与基础信息 -->
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="card-title mb-0">{{ member.name }}</h3>
+                        <p class="mb-0">{{ member.position }}</p>
+                    </div>
+                    <div class="card-body text-center">
+                        <img src="{{ member.avatar.url }}" class="rounded-circle mb-4" alt="{{ member.name }}" style="width: 200px; height: 200px; object-fit: cover; border: 8px solid #f8f9fa;">
+                        <!-- 成员详细简介 -->
+                        <div class="text-left text-muted fs-5 line-height-2">
+                            {{ member.desc|linebreaksbr }}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'team:team_list' %}" class="btn btn-outline-primary w-100">
+                            <i class="fa fa-arrow-left me-2"></i> 返回团队列表
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧其他团队成员 -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">其他团队成员</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if other_members %}
+                            <div class="row g-3">
+                                {% for other in other_members %}
+                                    <div class="col-6">
+                                        <a href="{% url 'team:team_detail' other.id %}" class="text-decoration-none text-dark">
+                                            <div class="card h-100 text-center small-card">
+                                                <img src="{{ other.avatar.url }}" class="card-img-top" alt="{{ other.name }}" style="height: 80px; object-fit: cover;">
+                                                <div class="card-body p-2">
+                                                    <h6 class="mb-0">{{ other.name }}</h6>
+                                                    <small class="text-muted">{{ other.position }}</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if team_members|length > 5 %}
+                                <div class="mt-3">
+                                    <a href="{% url 'team:team_list' %}" class="btn btn-outline-primary btn-sm w-100">查看全部团队成员</a>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <p class="text-muted text-center mb-0">暂无其他团队成员</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 自定义样式 -->
+{% block extra_css %}
+<style>
+    .line-height-2 {
+        line-height: 2;
+    }
+    .small-card:hover {
+        background-color: #f8f9fa;
+        transition: all 0.2s ease;
+    }
+</style>
+{% endblock %}
+{% endblock %}

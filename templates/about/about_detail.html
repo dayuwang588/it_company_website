@@ -1,0 +1,93 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ about_info.title }} - 关于我们 - IT公司官网{% endblock %}
+
+{% block content %}
+<!-- 面包屑导航 -->
+<section class="bg-light py-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'about:about_index' %}">关于我们</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ about_info.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- 详情主体内容 -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧主要内容 -->
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <!-- 标题 -->
+                <h1 class="mb-4">{{ about_info.title }}</h1>
+                <!-- 更新时间 -->
+                <p class="text-muted mb-4">最后更新：{{ about_info.updated_at|date:'Y年m月d日' }}</p>
+                
+                <!-- 简介图片 -->
+                {% if about_info.image %}
+                    <div class="mb-5">
+                        <img src="{{ about_info.image.url }}" class="img-fluid rounded shadow-lg w-100" alt="{{ about_info.title }}">
+                    </div>
+                {% endif %}
+                
+                <!-- 简介详情内容 -->
+                <div class="content text-muted fs-5 line-height-2">
+                    {{ about_info.content|linebreaksbr }}
+                </div>
+                
+                <!-- 返回按钮 -->
+                <div class="mt-5">
+                    <a href="{% url 'about:about_index' %}" class="btn btn-outline-primary">
+                        <i class="fa fa-arrow-left me-2"></i> 返回关于我们
+                    </a>
+                </div>
+            </div>
+
+            <!-- 右侧侧边栏（发展历程） -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">发展历程</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if history_list %}
+                            <ul class="list-group list-group-flush">
+                                {% for history in history_list|slice:":8" %}
+                                    <li class="list-group-item border-0 pb-3">
+                                        <span class="badge bg-primary me-2">{{ history.year }}</span>
+                                        <span>{{ history.title }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {% if history_list|length > 8 %}
+                                <a href="{% url 'about:about_index' %}" class="btn btn-sm btn-outline-primary mt-3 w-100">查看全部历程</a>
+                            {% endif %}
+                        {% else %}
+                            <p class="text-muted text-center mb-0">暂无发展历程信息</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 自定义样式 -->
+{% block extra_css %}
+<style>
+    .line-height-2 {
+        line-height: 2;
+    }
+    .content img {
+        max-width: 100%;
+        height: auto;
+        margin: 10px 0;
+    }
+</style>
+{% endblock %}
+{% endblock %}

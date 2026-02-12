@@ -1,0 +1,77 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - IT公司官网{% endblock %}
+
+{% block content %}
+<!-- 页面头部Banner -->
+<section class="bg-primary text-white py-5">
+    <div class="container">
+        <h1 class="display-5">人才招聘</h1>
+        <p class="lead">加入我们，一起创造更有价值的未来</p>
+    </div>
+</section>
+
+<!-- 招聘岗位列表 -->
+<section class="py-5">
+    <div class="container">
+        {% if job_list %}
+            <div class="row g-4">
+                {% for job in job_list %}
+                    <div class="col-lg-6 col-xl-4">
+                        <div class="card shadow-sm h-100 hover-shadow">
+                            <!-- 岗位基础信息 -->
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">{{ job.title }}</h5>
+                                <small class="text-muted">{{ job.department }} · 招聘{{ job.num }}人</small>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled mb-3">
+                                    <li class="mb-2"><i class="fa fa-briefcase text-primary me-2"></i> 经验要求：{{ job.experience }}</li>
+                                    <li class="mb-2"><i class="fa fa-graduation-cap text-primary me-2"></i> 学历要求：{{ job.education }}</li>
+                                    <li class="mb-2"><i class="fa fa-money text-primary me-2"></i> 薪资范围：{{ job.salary }}</li>
+                                    <li class="mb-0"><i class="fa fa-calendar text-primary me-2"></i> 发布时间：{{ job.created_at|date:'Y-m-d' }}</li>
+                                </ul>
+                                <!-- 岗位简介（截断） -->
+                                <p class="card-text text-muted line-clamp-2">
+                                    {{ job.content|truncatechars:100 }}
+                                </p>
+                            </div>
+                            <!-- 查看详情按钮 -->
+                            <div class="card-footer bg-transparent">
+                                <a href="{% url 'job:job_detail' job.id %}" class="btn btn-primary w-100">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- 无招聘岗位时的提示 -->
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fa fa-inbox text-muted fa-4x"></i>
+                </div>
+                <h4 class="text-muted">暂无招聘岗位</h4>
+                <p class="text-secondary">我们暂未发布新的招聘需求，敬请关注后续更新</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- 自定义样式 -->
+{% block extra_css %}
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+{% endblock %}
