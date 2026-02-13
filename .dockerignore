@@ -1,0 +1,20 @@
+
+# 排除虚拟环境目录
+venv/
+# 排除 Python 缓存文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+# 排除 Git 目录
+.git/
+.gitignore
+# 排除日志目录（容器内重新创建）
+logs/
+# 排除环境变量文件（容器内用 ENV 传递）
+.env
+# 排除 IDE 配置文件
+.idea/
+.vscode/
+# 排除 Windows 临时文件
+*.tmp

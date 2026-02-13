@@ -1,0 +1,55 @@
+
+version: '3.8'
+
+services:
+  # Django 应用服务
+  django_app:
+    # 构建 Django 镜像
+    build: .
+    # 容器名称
+    container_name: django_it_company
+    # 环境变量（覆盖 settings.py 中的配置）
+    environment:
+      - SECRET_KEY=your-secure-secret-key-xxxxxxx  # 建议生成随机密钥
+      - DEBUG=False
+      - ALLOWED_HOSTS=127.0.0.1
+    # 数据卷：映射静态文件/媒体文件/数据库到宿主机，避免容器删除数据丢失
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+      - ./db.sqlite3:/app/db.sqlite3
+      - ./logs:/app/logs
+    # 重启策略：容器异常退出时自动重启
+    restart: always
+    # 仅在 Docker 网络内访问，不暴露到宿主机
+    networks:
+      - app_network
+
+  # Nginx 反向代理服务
+  nginx:
+    # 使用官方 Nginx 镜像
+    image: nginx:alpine
+    # 容器名称
+    container_name: nginx_it_company
+    # 映射宿主机 80 端口到容器 80 端口（HTTP）
+    ports:
+      - "80:80"
+      # 若配置 HTTPS，需映射 443 端口：- "443:443"
+    # 数据卷：映射 Nginx 配置文件和静态/媒体文件
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./static:/app/static
+      - ./media:/app/media
+      # 若配置 HTTPS，需映射证书：- ./nginx/certs:/etc/nginx/certs
+    # 重启策略
+    restart: always
+    # 依赖 Django 服务（先启动 Django，再启动 Nginx）
+    depends_on:
+      - django_app
+    networks:
+      - app_network
+
+# 自定义网络：让 Django 和 Nginx 容器互通
+networks:
+  app_network:
+    driver: bridge
